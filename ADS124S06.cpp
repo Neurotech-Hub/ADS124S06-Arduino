@@ -38,31 +38,35 @@
  */
 #include "ADS124S06.h"
 
+const SPISettings ADS124S06_DEFAULT_SPI_SETTINGS(1000000, MSBFIRST, SPI_MODE1);
+
 /* Internal register map array (to recall current configuration) */
 static uint8_t registerMap[NUM_REGISTERS];
 
-ADS124S06::ADS124S06(uint8_t csPin) : _csPin(csPin) {}
+ADS124S06::ADS124S06(uint8_t csPin, SPISettings settings) : _csPin(csPin), _spiSettings(settings) {}
 
 void ADS124S06::begin()
 {
     pinMode(_csPin, OUTPUT);
     deselect();
-    SPI.begin();
+    SPI.begin(); // Initialize the SPI bus
 }
 
 void ADS124S06::end()
 {
-    SPI.end();
+    // SPI.end();
 }
 
 void ADS124S06::select()
 {
+    SPI.beginTransaction(_spiSettings); // Start the SPI transaction with the provided settings
     digitalWrite(_csPin, LOW);
 }
 
 void ADS124S06::deselect()
 {
     digitalWrite(_csPin, HIGH);
+    SPI.endTransaction(); // End the SPI transaction
 }
 
 uint8_t ADS124S06::getRegisterValue(uint8_t address)

@@ -6,6 +6,7 @@
 
 // Define constants and macros
 #define ADS124S06_DEFAULT_CS_PIN 10
+extern const SPISettings ADS124S06_DEFAULT_SPI_SETTINGS;
 
 #define NUM_REGISTERS ((uint8_t)18)
 
@@ -501,7 +502,7 @@ class ADS124S06
 {
 public:
     // Constructor
-    ADS124S06(uint8_t csPin = ADS124S06_DEFAULT_CS_PIN);
+    ADS124S06(uint8_t csPin = ADS124S06_DEFAULT_CS_PIN, SPISettings settings = DEFAULT_SPI_SETTINGS);
 
     // Initialization
     void begin();
@@ -530,6 +531,7 @@ public:
 
 private:
     uint8_t _csPin;
+    SPISettings _spiSettings;
     void select();
     void deselect();
 };
